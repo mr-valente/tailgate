@@ -37,8 +37,18 @@ else
   fi
 fi
 
-# Start Sablier if available (in background)
-if [ -f /usr/bin/sablier ]; then
+# Start Sablier if requested (in background)
+# Default to true if INCLUDE_SABLIER is not set
+INCLUDE_SABLIER=${INCLUDE_SABLIER:-true}
+SABLIER_VERSION=${SABLIER_VERSION:-1.10.1}
+
+if [ "$INCLUDE_SABLIER" = "true" ]; then
+  echo "Downloading Sablier v${SABLIER_VERSION}..."
+  curl -L "https://github.com/sablierapp/sablier/releases/download/v${SABLIER_VERSION}/sablier_${SABLIER_VERSION}_linux-amd64" \
+    -o /usr/bin/sablier \
+    && chmod +x /usr/bin/sablier
+  echo "Sablier installed successfully."
+  
   echo "Starting Sablier..."
   sablier start --configFile=/etc/sablier/sablier.yml &
   sleep 2

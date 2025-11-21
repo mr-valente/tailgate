@@ -66,10 +66,6 @@ RUN if [ -n "$PLUGINS" ]; then \
 
 FROM debian:bookworm
 
-# Sablier configuration
-ARG SABLIER_VERSION=1.10.1
-ARG INCLUDE_SABLIER=false
-
 # Install runtime dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -92,13 +88,6 @@ RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/bookworm.noarmor.gpg | t
  && apt-get update \
  && apt-get install -y --no-install-recommends tailscale \
  && rm -rf /var/lib/apt/lists/*
-
-# Optionally install Sablier for dynamic service scaling
-RUN if [ "$INCLUDE_SABLIER" = "true" ]; then \
-  curl -L "https://github.com/sablierapp/sablier/releases/download/v${SABLIER_VERSION}/sablier_${SABLIER_VERSION}_linux-amd64" \
-    -o /usr/bin/sablier \
-    && chmod +x /usr/bin/sablier; \
-  fi
 
 # Copy Caddy binary from builder stage
 COPY --from=builder /caddy /usr/bin/caddy
