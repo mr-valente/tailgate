@@ -40,13 +40,24 @@ fi
 # Start Sablier if requested (in background)
 # Default to true if INCLUDE_SABLIER is not set
 INCLUDE_SABLIER=${INCLUDE_SABLIER:-true}
-SABLIER_VERSION=${SABLIER_VERSION:-1.10.1}
+# INCLUDE_SABLIER=false
 
 if [ "$INCLUDE_SABLIER" = "true" ]; then
   echo "Downloading Sablier v${SABLIER_VERSION}..."
+  # Create a temp dir to handle extraction of multiple files (LICENSE, README, etc.)
+  # mkdir -p /tmp/sablier_install
+  
+  # curl -L "https://github.com/sablierapp/sablier/releases/download/v${SABLIER_VERSION}/sablier-${SABLIER_VERSION}-linux-amd64.tar.gz" \
+  #   -o /tmp/sablier_install/sablier.tar.gz \
+  #   && tar -xzf /tmp/sablier_install/sablier.tar.gz -C /tmp/sablier_install \
+  #   && mv /tmp/sablier_install/sablier /usr/bin/sablier \
+  #   && chmod +x /usr/bin/sablier \
+  #   && rm -rf /tmp/sablier_install
+
   curl -L "https://github.com/sablierapp/sablier/releases/download/v${SABLIER_VERSION}/sablier_${SABLIER_VERSION}_linux-amd64" \
     -o /usr/bin/sablier \
-    && chmod +x /usr/bin/sablier
+    && chmod +x /usr/bin/sablier \
+    
   echo "Sablier installed successfully."
   
   echo "Starting Sablier..."

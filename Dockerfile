@@ -5,7 +5,7 @@
 # Builds Caddy with optional plugins using xcaddy
 ################################################################################
 
-FROM debian:bookworm AS builder
+FROM debian:trixie AS builder
 
 # Golang version for building Caddy
 ARG GOLANG_VERSION=1.25.3
@@ -64,7 +64,7 @@ RUN if [ -n "$PLUGINS" ]; then \
 # Minimal Debian image with Tailscale, Caddy, and optionally Sablier
 ################################################################################
 
-FROM debian:bookworm
+FROM debian:trixie
 
 # Install runtime dependencies
 RUN apt-get update && \
@@ -83,11 +83,15 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Tailscale from official repository
-RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/bookworm.noarmor.gpg | tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null \
- && curl -fsSL https://pkgs.tailscale.com/stable/debian/bookworm.tailscale-keyring.list | tee /etc/apt/sources.list.d/tailscale.list \
+RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/trixie.noarmor.gpg | tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null \
+ && curl -fsSL https://pkgs.tailscale.com/stable/debian/trixie.tailscale-keyring.list | tee /etc/apt/sources.list.d/tailscale.list \
  && apt-get update \
  && apt-get install -y --no-install-recommends tailscale \
  && rm -rf /var/lib/apt/lists/*
+
+# Sablier version, passed via build-arg
+ARG SABLIER_VERSION
+ENV SABLIER_VERSION=${SABLIER_VERSION}
 
 # Copy Caddy binary from builder stage
 COPY --from=builder /caddy /usr/bin/caddy
