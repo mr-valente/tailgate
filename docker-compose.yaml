@@ -15,5 +15,9 @@ services:
       args:
         PLUGINS: "
           github.com/caddy-dns/cloudflare
-          github.com/acouvreur/sablier/plugins/caddy
+          github.com/sablierapp/sablier-caddy-plugin
           "
+        # PLUGINS: "
+        #   github.com/caddy-dns/cloudflare
+        #   github.com/acouvreur/sablier/plugins/caddy
+        #   "
