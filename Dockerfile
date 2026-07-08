@@ -66,6 +66,8 @@ RUN if [ -n "$PLUGINS" ]; then \
 
 FROM debian:trixie
 
+ARG TAILSCALE_VERSION
+
 # Install runtime dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -86,12 +88,18 @@ RUN apt-get update && \
 RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/trixie.noarmor.gpg | tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null \
  && curl -fsSL https://pkgs.tailscale.com/stable/debian/trixie.tailscale-keyring.list | tee /etc/apt/sources.list.d/tailscale.list \
  && apt-get update \
- && apt-get install -y --no-install-recommends tailscale \
+ && if [ -n "$TAILSCALE_VERSION" ]; then \
+      apt-get install -y --no-install-recommends "tailscale=${TAILSCALE_VERSION}"; \
+    else \
+      apt-get install -y --no-install-recommends tailscale; \
+    fi \
  && rm -rf /var/lib/apt/lists/*
 
-# Sablier version, passed via build-arg
-ARG SABLIER_VERSION
-ENV SABLIER_VERSION=${SABLIER_VERSION}
+# Sablier runtime options, passed via build args
+ARG INCLUDE_SABLIER=false
+ARG SABLIER_VERSION=1.10.1
+ENV INCLUDE_SABLIER=${INCLUDE_SABLIER} \
+    SABLIER_VERSION=${SABLIER_VERSION}
 
 # Copy Caddy binary from builder stage
 COPY --from=builder /caddy /usr/bin/caddy

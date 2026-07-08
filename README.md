@@ -15,8 +15,8 @@ Tailgate allows you to expose containerized services privately over your Tailnet
 
 | Image Tag | Description |
 |-----------|-------------|
-| `valentemath/tailgate:latest` | Base image. Includes Tailscale, Caddy, and Cloudflare DNS plugin. |
-| `valentemath/tailgate:latest-with-sablier` | Includes the **Sablier Caddy plugin**. The Sablier binary is downloaded automatically at runtime. |
+| `valentemath/tailgate:latest` | Base image. Includes Tailscale, Caddy, and Cloudflare DNS plugin. Sablier is disabled by default. |
+| `valentemath/tailgate:latest-with-sablier` | Includes the **Sablier Caddy plugin**. The Sablier binary is downloaded and started automatically at runtime. |
 
 ## Quick Start
 
@@ -81,7 +81,7 @@ docker compose up -d
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `INCLUDE_SABLIER` | Set to `true` to download and start the Sablier binary. | `true` |
+| `INCLUDE_SABLIER` | Set to `true` to download and start the Sablier binary. The `latest-with-sablier` image sets this automatically. | `false` (`true` in `latest-with-sablier`) |
 | `SABLIER_VERSION` | The version of Sablier to download. | `1.10.1` |
 | `SABLIER_PORT` | The port Sablier listens on. | `10000` |
 

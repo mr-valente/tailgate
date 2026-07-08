@@ -38,8 +38,9 @@ else
 fi
 
 # Start Sablier if requested (in background)
-# Default to true if INCLUDE_SABLIER is not set
-INCLUDE_SABLIER=${INCLUDE_SABLIER:-true}
+# The -with-sablier image sets INCLUDE_SABLIER=true at build time.
+INCLUDE_SABLIER=${INCLUDE_SABLIER:-false}
+SABLIER_VERSION=${SABLIER_VERSION:-1.10.1}
 
 if [ "$INCLUDE_SABLIER" = "true" ]; then
   echo "Downloading Sablier v${SABLIER_VERSION}..."
@@ -56,17 +57,22 @@ if [ "$INCLUDE_SABLIER" = "true" ]; then
   echo "Starting Sablier..."
   sablier start --configFile=/etc/sablier/sablier.yml &
   sleep 2
+else
+  echo "Sablier disabled; skipping download and startup."
 fi
 
 # Run caddy (in foreground with exec)
 if [ -f /etc/caddy/Caddyfile ]; then
   # Use the Caddyfile in the /etc/caddy directory if it exists
   if [ "${CADDY_WATCH}" = "true" ]; then
+    echo "Running with Caddyfile watch enabled..."
     exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile --watch
   else
+    echo "Running without Caddyfile watch enabled..."
     exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
   fi
 else
   # Otherwise, run without a config
+  echo "Running without a Caddyfile..."
   exec caddy run
 fi

@@ -5,6 +5,9 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
+        INCLUDE_SABLIER: "false"
+        TAILSCALE_VERSION: "${TAILSCALE_VERSION:-}"
+        SABLIER_VERSION: "${SABLIER_VERSION:-}"
         PLUGINS: "github.com/caddy-dns/cloudflare"
 
   tailgate-sablier:
@@ -13,6 +16,9 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
+        INCLUDE_SABLIER: "true"
+        TAILSCALE_VERSION: "${TAILSCALE_VERSION:-}"
+        SABLIER_VERSION: "${SABLIER_VERSION:-}"
         PLUGINS: "
           github.com/caddy-dns/cloudflare
           github.com/sablierapp/sablier-caddy-plugin
