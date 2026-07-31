@@ -68,6 +68,7 @@ docker compose up -d
 | `TAILSCALE_AUTHKEY` | **Required**. Your [Tailscale Auth Key](https://tailscale.com/kb/1085/auth-keys/). | - |
 | `TAILSCALE_HOSTNAME` | The hostname for this node on your Tailnet. | `tailgate` |
 | `TAILNET_NAME` | Your Tailnet name (required for some MagicDNS setups). | - |
+| `TAILSCALE_TUN` | The TUN device for tailscaled. Defaults to [userspace networking](https://tailscale.com/docs/concepts/userspace-networking). Set to a device name (e.g. `tailscale0`) for kernel mode, or to an empty string to omit `--tun`. Kernel mode requires `NET_ADMIN`/`NET_RAW` and `/dev/net/tun`. | `userspace-networking` |
 
 ### Caddy
 | Variable | Description | Default |
