@@ -3,11 +3,25 @@
 # Fail on any error
 set -e
 
+# TUN device for tailscaled. Defaults to userspace networking.
+# Set TAILSCALE_TUN to a device name (e.g. tailscale0) for kernel mode,
+# or to an empty string to omit --tun and use Tailscale's default.
+# ${TAILSCALE_TUN+x} is empty only when the variable is unset (not when empty).
+if [ -z "${TAILSCALE_TUN+x}" ]; then
+  TAILSCALE_TUN="userspace-networking"
+fi
+
+if [ -n "$TAILSCALE_TUN" ]; then
+  TAILSCALE_TUN_ARG="--tun=$TAILSCALE_TUN"
+else
+  TAILSCALE_TUN_ARG=""
+fi
+
 # Start tailscaled and wait for it to come up
 tailscaled \
   --state=/tailscale/tailscaled.state \
   --socket=/var/run/tailscale/tailscaled.sock \
-  --tun=userspace-networking \
+  $TAILSCALE_TUN_ARG \
   &
 sleep 5
 
